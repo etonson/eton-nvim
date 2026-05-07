@@ -1,26 +1,49 @@
 return {
-  -- Core: Treesitter for XML and JSON
+  ----------------------------------------------------------------------
+  -- Treesitter (XML / JSON syntax + structure)
+  ----------------------------------------------------------------------
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "xml", "json", "json5", "jsonc" })
-      end
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, {
+        "xml",
+        "json",
+        "json5",
+        "jsonc",
+      })
     end,
   },
 
-  -- Formatting: conform.nvim
+  ----------------------------------------------------------------------
+  -- Formatter: conform.nvim
+  ----------------------------------------------------------------------
   {
     "stevearc/conform.nvim",
     opts = {
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+      formatters = {
+        xmllint = {
+          command = "xmllint",
+          args = { "--format", "-" },
+          stdin = true,
+        },
+      },
       formatters_by_ft = {
         json = { "jq" },
-        xml = { "xmlformat" },
+        jsonc = { "jq" },
+        json5 = { "jq" },
+        xml = { "xmllint" },
       },
     },
   },
 
-  -- Structural Navigation: aerial.nvim
+  ----------------------------------------------------------------------
+  -- Structural outline (symbols sidebar)
+  ----------------------------------------------------------------------
   {
     "stevearc/aerial.nvim",
     dependencies = {
@@ -28,18 +51,20 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     opts = {
+      backends = { "treesitter", "lsp", "markdown" },
       on_attach = function(bufnr)
-        -- Jump forwards/backwards with '{' and '}'
         vim.keymap.set("n", "{", "<cmd>AerialPrev<cr>", { buffer = bufnr })
         vim.keymap.set("n", "}", "<cmd>AerialNext<cr>", { buffer = bufnr })
       end,
     },
     keys = {
-      { "<leader>cs", "<cmd>AerialToggle<cr>", desc = "Aerial (Symbols)" },
+      { "<leader>cs", "<cmd>AerialToggle<cr>", desc = "Aerial Symbols" },
     },
   },
 
-  -- Breadcrumbs: barbecue.nvim
+  ----------------------------------------------------------------------
+  -- Breadcrumbs (current scope path)
+  ----------------------------------------------------------------------
   {
     "utilyre/barbecue.nvim",
     name = "barbecue",
@@ -51,49 +76,74 @@ return {
     opts = {},
   },
 
-  -- JSON Schema: SchemaStore.nvim
+  ----------------------------------------------------------------------
+  -- JSON Schema support
+  ----------------------------------------------------------------------
   {
     "b0o/SchemaStore.nvim",
     lazy = true,
   },
+
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         jsonls = {
-          -- SchemaStore setup
           settings = {
             json = {
-              schemas = {},
               validate = { enable = true },
+              schemas = {},
             },
           },
           on_new_config = function(new_config)
-            new_config.settings.json.schemas = new_config.settings.json.schemas or {}
-            vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
+            local schemas = require("schemastore").json.schemas()
+            new_config.settings.json.schemas =
+              vim.list_extend(new_config.settings.json.schemas or {}, schemas)
           end,
         },
-        lemminx = {}, -- XML LSP
+
+        -- XML LSP
+        lemminx = {},
       },
     },
   },
 
-  -- XML Auto-tag: nvim-ts-autotag
+  ----------------------------------------------------------------------
+  -- Auto tag for XML/HTML
+  ----------------------------------------------------------------------
   {
     "windwp/nvim-ts-autotag",
     opts = {},
   },
 
-  -- Ensure tools are installed
+  ----------------------------------------------------------------------
+  -- Mason (tool installer)
+  ----------------------------------------------------------------------
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
+
       vim.list_extend(opts.ensure_installed, {
-        "xmlformat",
+        "jq",
         "json-lsp",
         "lemminx",
-        "jq",
+      })
+    end,
+  },
+
+  ----------------------------------------------------------------------
+  -- Optional: better folding for XML/JSON
+  ----------------------------------------------------------------------
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "xml", "json" },
+        callback = function()
+          vim.opt_local.foldmethod = "expr"
+          vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
+        end,
       })
     end,
   },
