@@ -7,6 +7,13 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
+-- 將 .si 檔案視為 XML 格式
+vim.filetype.add({
+  extension = {
+    si = "xml",
+  },
+})
+
 -- 小檔案 (100KB以下) 開啟時自動格式化 XML/JSON
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "xml", "json" },
