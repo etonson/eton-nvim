@@ -34,13 +34,16 @@ return {
 
   -- mason ensure installed
   {
-    "mason-org/mason.nvim",
+    "williamboman/mason.nvim",
     opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, {
         "jdtls",
         "java-debug-adapter",
         "java-test",
         "shellcheck",
+        "bash-language-server",
+        "shfmt",
       })
     end,
   },
