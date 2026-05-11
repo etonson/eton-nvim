@@ -29,3 +29,12 @@ vim.api.nvim_create_autocmd("FileType", {
     end
   end,
 })
+
+-- 強制所有檔案使用 Unix 格式 (LF)
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  callback = function()
+    if vim.opt.fileformat:get() ~= "unix" then
+      vim.opt.fileformat = "unix"
+    end
+  end,
+})

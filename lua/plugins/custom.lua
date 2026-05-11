@@ -47,4 +47,18 @@ return {
       })
     end,
   },
+  -- 在狀態列顯示檔案格式 (LF/CRLF)
+  {
+    "nvim-lualine/lualine.nvim",
+    opts = function(_, opts)
+      table.insert(opts.sections.lualine_x, 2, {
+        "fileformat",
+        symbols = {
+          unix = "LF",
+          dos = "CRLF",
+          mac = "CR",
+        },
+      })
+    end,
+  },
 }
