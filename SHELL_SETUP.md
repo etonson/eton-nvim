@@ -14,18 +14,18 @@ sudo apt install -y shellcheck dos2unix
 ## ⚙️ Neovim 設定
 
 ### 1. 啟用 Shell 語言支援
-在 `lua/config/lazy.lua` 中加入了 `lazyvim.plugins.extras.lang.sh` 擴展。這會自動整合：
+目前透過 `lua/plugins/editor.lua` 與 `lua/plugins/lsp.lua` 進行手動配置與工具管理，確保安裝：
 - **Linter**: `shellcheck`
 - **Formatter**: `shfmt`
 
 ### 2. Mason 自動安裝
-在 `lua/plugins/custom.lua` 中將 `shellcheck` 加入了 `ensure_installed` 清單。
+在 `lua/plugins/editor.lua` 中已將 `shellcheck` 與 `shfmt` 加入 `ensure_installed` 清單，Mason 會在啟動時自動處理。
 
 ### 3. 強制使用 Unix 換行符號 (LF)
 為了避免在 Linux 執行腳本時出現 `\r` 錯誤，在 `lua/config/options.lua` 中做了以下設定：
 ```lua
 vim.opt.fileformat = "unix"      -- 預設新檔案使用 LF
-vim.opt.fileformats = "unix,dos" -- 開啟檔案時優先偵測並維持 unix 格式
+vim.opt.fileformats = "unix"     -- 強制只使用 unix 格式，無視 dos 偵測
 ```
 
 ## 🔍 常見問題處理
