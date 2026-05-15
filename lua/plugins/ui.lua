@@ -46,4 +46,13 @@ return {
     opts = {},
     dependencies = { "nvim-tree/nvim-web-devicons" },
   },
+
+  -- Markdown 增強渲染 (LazyVim 推薦)
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    opts = {
+      file_types = { "markdown" },
+    },
+    ft = { "markdown" },
+  },
 }
