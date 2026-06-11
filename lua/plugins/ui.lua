@@ -1,4 +1,14 @@
 return {
+  -- 避免小型但單行較長的 XML/JSON 被誤判為大檔案
+  {
+    "folke/snacks.nvim",
+    opts = {
+      bigfile = {
+        line_length = 10000,
+      },
+    },
+  },
+
   -- 配色方案
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
