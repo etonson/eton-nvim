@@ -1,49 +1,49 @@
-# Shell 腳本開發環境設定 (Shell Setup)
+# Shell Script Development Environment Setup (Shell Setup)
 
-本文件記錄了如何設定 Shell 腳本的開發環境，包含 Linter 設定與換行符號 (Line Endings) 的處理。
+This document records how to set up the development environment for Shell scripts, including Linter settings and the handling of line endings.
 
-## 🛠 工具安裝
+## 🛠 Tool Installation
 
-### 1. 系統層級工具
-安裝 `shellcheck` (靜態分析工具) 與 `dos2unix` (格式轉換工具)：
+### 1. System-Level Tools
+Install `shellcheck` (static analysis tool) and `dos2unix` (format conversion tool):
 ```bash
 sudo apt update
 sudo apt install -y shellcheck dos2unix
 ```
 
-## ⚙️ Neovim 設定
+## ⚙️ Neovim Configuration
 
-### 1. 啟用 Shell 語言支援
-目前透過 `lua/plugins/editor.lua` 與 `lua/plugins/lsp.lua` 進行手動配置與工具管理，確保安裝：
+### 1. Enable Shell Language Support
+Currently configured manually and managed via `lua/plugins/editor.lua` and `lua/plugins/lsp.lua`. Make sure they are installed:
 - **Linter**: `shellcheck`
 - **Formatter**: `shfmt`
 
-### 2. Mason 自動安裝
-在 `lua/plugins/editor.lua` 中已將 `shellcheck` 與 `shfmt` 加入 `ensure_installed` 清單，Mason 會在啟動時自動處理。
+### 2. Mason Auto-Installation
+In `lua/plugins/editor.lua`, `shellcheck` and `shfmt` have been added to the `ensure_installed` list, so Mason will automatically install them upon startup.
 
-### 3. 強制使用 Unix 換行符號 (LF)
-為了避免在 Linux 執行腳本時出現 `\r` 錯誤，在 `lua/config/options.lua` 中做了以下設定：
+### 3. Enforce Unix Line Endings (LF)
+To prevent `\r` errors when running scripts on Linux, the following configurations have been made in `lua/config/options.lua`:
 ```lua
-vim.opt.fileformat = "unix"      -- 預設新檔案使用 LF
-vim.opt.fileformats = "unix"     -- 強制只使用 unix 格式，無視 dos 偵測
+vim.opt.fileformat = "unix"      -- Default new files to use LF
+vim.opt.fileformats = "unix"     -- Force using unix format, ignoring dos detection
 ```
 
-## 🔍 常見問題處理
+## 🔍 Troubleshooting
 
-### 遇到 `rm: 無法刪除 ... \r: 沒有此一檔案或目錄`
-這表示檔案使用了 Windows 的 CRLF 格式。
+### Encountering `rm: cannot remove ... \r: No such file or directory`
+This indicates that the file uses the Windows CRLF format.
 
-**解法 A：使用 dos2unix (推薦)**
+**Solution A: Use dos2unix (Recommended)**
 ```bash
 dos2unix <filename>
 ```
 
-**解法 B：在 Neovim 中轉換**
-1. 開啟檔案。
-2. 執行指令 `:set ff=unix`。
-3. 存檔 `:w`。
+**Solution B: Convert within Neovim**
+1. Open the file.
+2. Execute the command `:set ff=unix`.
+3. Save the file `:w`.
 
-**解法 C：使用 sed 快速修復**
+**Solution C: Quick fix using sed**
 ```bash
 sed -i 's/\r$//' <filename>
 ```

@@ -1,57 +1,57 @@
-# Neovim 環境備份與還原指南
+# Neovim Environment Backup & Restore Guide
 
-本文件說明如何備份此 Neovim 設定，並在重灌系統或新環境中快速還原。
+This document explains how to back up this Neovim configuration and quickly restore it in a reinstalled system or a new environment.
 
-## 1. 備份方式 (推送到 Git)
+## 1. Backup Method (Push to Git)
 
-建議將此設定檔目錄 (`~/.config/nvim`) 託管於 GitHub 或 GitLab。
+It is recommended to host this configuration directory (`~/.config/nvim`) on GitHub or GitLab.
 
 ```bash
-# 如果尚未設定遠端倉庫
-git remote add origin <您的倉庫網址>
+# If the remote repository is not configured yet
+git remote add origin <your-repository-url>
 
-# 提交並推送變更
+# Commit and push changes
 git add .
-git commit -m "update: 備份最新設定"
+git commit -m "update: backup latest configuration"
 git push -u origin master
 ```
 
 ---
 
-## 2. 還原方式 (在新電腦上)
+## 2. Restore Method (On a New Computer)
 
-只需執行以下三行指令即可恢復完整環境：
+Simply execute the following commands to restore the complete environment:
 
 ```bash
-# 1. 下載設定檔
-git clone <您的倉庫網址> ~/.config/nvim
+# 1. Download the configuration files
+git clone <your-repository-url> ~/.config/nvim
 cd ~/.config/nvim
 
-# 2. 執行自動設定腳本
+# 2. Run the auto-setup script
 bash setup.sh
 ```
 
 ---
 
-## 3. 腳本 (`setup.sh`) 內容說明
+## 3. Script (`setup.sh`) Content Description
 
-`setup.sh` 會自動處理以下事項：
-1. **安裝系統依賴**：`jq` (JSON)、`xmllint` (XML)、`curl`、`git`、`build-essential`。
-2. **安裝 Neovim**：若系統未安裝，自動下載並設定穩定版。
-3. **插件同步**：自動執行 `Lazy.nvim` 同步插件。
-4. **工具安裝**：自動執行 `Mason` 安裝相關 LSP 與格式化工具。
+`setup.sh` automatically handles the following:
+1. **Install system dependencies**: `jq` (JSON), `xmllint` (XML), `curl`, `git`, `build-essential`.
+2. **Install Neovim**: If Neovim is not installed, it automatically downloads and configures the stable version.
+3. **Plugin synchronization**: Automatically runs `Lazy.nvim` to sync plugins.
+4. **Tool installation**: Automatically runs `Mason` to install relevant LSP and formatting tools.
 
 ---
 
-## 4. 常見問題
+## 4. FAQ
 
-### Q: 自動排版沒反應？
-- 請確保系統已安裝 `jq` 與 `xmllint` (腳本會自動安裝)。
-- 檢查 `:ConformInfo` 查看格式化工具狀態。
+### Q: Auto-formatting is not working?
+- Ensure that `jq` and `xmllint` are installed on the system (the script installs them automatically).
+- Run `:ConformInfo` to check the status of formatting tools.
 
-### Q: 如何手動觸發排版？
-- 使用快捷鍵 `<leader>f` (空格 + f)。
-- 或存檔時 (`:w`) 會自動觸發。
+### Q: How to manually trigger formatting?
+- Use the keymap `<leader>f` (Space + f).
+- Or it will be automatically triggered when saving the file (`:w`).
 
-### Q: .si 檔案有支援嗎？
-- 有的，設定中已將 `.si` 關聯為 XML 格式。
+### Q: Is there support for `.si` files?
+- Yes, `.si` files have been associated with the XML format in the configuration.
