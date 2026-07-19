@@ -13,6 +13,8 @@ return {
         "tsx",
         "bash",
         "lua",
+        "python",
+        "toml",
         "yaml",
       })
     end,
@@ -29,6 +31,7 @@ return {
         json = { "jq" },
         jsonc = { "jq" },
         json5 = { "jq" },
+        python = { "ruff_format" },
         xml = { "xmllint" },
       },
     },
@@ -45,10 +48,13 @@ return {
       vim.list_extend(opts.ensure_installed, {
         -- 核心工具
         "jq",
+        "debugpy",
         "shellcheck",
         "shfmt",
         "stylua",
         -- LSP Servers
+        "pyright",
+        "ruff",
         "vtsls",
         "json-lsp",
         "yaml-language-server",

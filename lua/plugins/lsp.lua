@@ -37,6 +37,19 @@ return {
         },
         -- XML 支援
         lemminx = {},
+        -- Python 支援
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoImportCompletions = true,
+                diagnosticMode = "workspace",
+                typeCheckingMode = "basic",
+              },
+            },
+          },
+        },
+        ruff = {},
       },
     },
   },
