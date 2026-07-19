@@ -3,6 +3,17 @@
 
 local map = vim.keymap.set
 
+local function move_cursor_to_mouse()
+  local pos = vim.fn.getmousepos()
+  if pos.winid == 0 or pos.line == 0 or pos.column == 0 then
+    return false
+  end
+
+  vim.api.nvim_set_current_win(pos.winid)
+  vim.api.nvim_win_set_cursor(pos.winid, { pos.line, pos.column - 1 })
+  return true
+end
+
 ----------------------------------------------------------------------
 -- 1. 仿 IDEA 快速功能
 ----------------------------------------------------------------------
@@ -34,6 +45,18 @@ end, { desc = "Podman Logs" })
 
 -- 快速開啟 Oil (檔案管理)
 map("n", "-", "<cmd>Oil<cr>", { desc = "Open Parent Directory (Oil)" })
+
+-- Ctrl+左鍵跳到游標點擊位置的定義
+map("n", "<C-LeftMouse>", function()
+  if not move_cursor_to_mouse() then return end
+  vim.lsp.buf.definition()
+end, { desc = "Go to Definition (Ctrl+Click)" })
+
+-- Ctrl+右鍵回到上一個跳轉位置
+map("n", "<C-RightMouse>", function()
+  local keys = vim.api.nvim_replace_termcodes("<C-o>", true, false, true)
+  vim.api.nvim_feedkeys(keys, "n", false)
+end, { desc = "Jump Back (Ctrl+Right Click)" })
 
 -- XML/JSON 智慧格式化
 map("n", "<leader>f", function()
